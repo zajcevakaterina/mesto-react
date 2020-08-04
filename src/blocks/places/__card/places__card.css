@@ -1,0 +1,7 @@
+.places__card {
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+}

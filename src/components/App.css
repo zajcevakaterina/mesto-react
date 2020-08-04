@@ -1,0 +1,45 @@
+@import url(../vendor/normalize.css);
+
+@import url(../vendor/fonts/fonts.css);
+
+@import url(../blocks/root/root.css);
+
+@import url(../blocks/popup/popup.css);
+@import url(../blocks/popup/_opened/popup_opened.css);
+@import url(../blocks/form/form.css);
+@import url(../blocks/header/header.css);
+@import url(../blocks/profile/profile.css);
+@import url(../blocks/places/places.css);
+@import url(../blocks/footer/footer.css);
+
+
+.app {
+  font-family: 'Inter', Arial, sans-serif;
+  min-width: 320px;
+  min-height: 100vh;
+  background: #000;
+  color: #fff;
+  margin: 0 auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
+}
+
+.app__section {
+  max-width: calc(100% - 38px);
+  margin: 0 auto;
+}
+
+@media screen and (min-width: 768px) {
+  .app__section {
+    width: calc(100% - 144px);
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .app__section {
+    width: calc(100% - 390px);
+    max-width: 890px;
+  }
+}
+

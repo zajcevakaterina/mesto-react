@@ -1,0 +1,9 @@
+@import url(./_visibility/popup__container_visibility_transparent.css);
+@import url(./_visibility/popup__container_visibility_visible.css);
+
+.popup__container {
+  box-sizing: border-box;
+  position: relative;
+  margin: 0;
+}
+
