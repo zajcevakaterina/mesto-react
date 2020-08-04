@@ -66,7 +66,8 @@ class App extends React.Component {
           onEditAvatar={this.handleEditAvatarClick}
           onEditProfile={this.handleEditProfileClick}
           onAddPlace={this.handleAddPlaceClick}
-          onCardClick={this.handleCardClick} />
+          onCardClick={this.handleCardClick}
+          onDeletePlace={this.handleDeletePlaceClick} />
         <Footer />
 
         <section className="popups">

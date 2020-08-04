@@ -41,7 +41,11 @@ class Main extends React.Component {
         <section className="places">
           {this.state.cards.map((card, index) => {
             return (
-              <Card onCardClick={this.props.onCardClick} card={card} key={index}/>
+              <Card
+                onCardClick={this.props.onCardClick}
+                onDeletePlace={this.props.onDeletePlace}
+                card={card}
+                key={index}/>
             )
           })}
         </section>
