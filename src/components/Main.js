@@ -14,14 +14,19 @@ class Main extends React.Component {
   }
 
   componentDidMount() {
-    api.getUserInfo().then(info => this.setState({
+    api.getUserInfo().
+    then(info => this.setState({
       userName: info.name,
       userDescription: info.about,
       userAvatar: info.avatar,
-    }));
-    api.getInitialCards().then(cards => this.setState({
+    }))
+    .catch(err => console.error(err));
+    
+    api.getInitialCards()
+    .then(cards => this.setState({
       cards
     }))
+    .catch(err => console.error(err))
   }
 
   render() {

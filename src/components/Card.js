@@ -11,7 +11,6 @@ function Card({card, onCardClick, onDeletePlace}) {
           <button type="button" className="places__like"></button>
           <span className="places__like-amount">{card.likes.length}</span>
         </div>
-
       </div>
     </div>
   )
