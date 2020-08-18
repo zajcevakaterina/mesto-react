@@ -76,36 +76,54 @@ class Api {
         link: link
       })
     })
-    .then(this._handleResponse)
-    .catch(this._handleResponseError);
+      .then(this._handleResponse)
+      .catch(this._handleResponseError);
   }
 
-  deleteCard(cardId){
+  deleteCard(cardId) {
     return fetch(`${this.baseUrl}/cards/${cardId}`, {
       method: 'DELETE',
       headers: this.headers,
     })
-    .then(this._handleResponse)
-    .catch(this._handleResponseError);
+      .then(this._handleResponse)
+      .catch(this._handleResponseError);
   }
 
-  addLike(cardId) {
-    return fetch(`${this.baseUrl}/cards/likes/${cardId}`, {
-      method: 'PUT',
-      headers: this.headers,
-    })
-    .then(this._handleResponse)
-    .catch(this._handleResponseError);
-  }
-
-  deleteLike(cardId) {
+  changeLikeCardStatus(cardId, isLiked) {
+    if (isLiked) {
+      return fetch(`${this.baseUrl}/cards/likes/${cardId}`, {
+        method: 'PUT',
+        headers: this.headers,
+      })
+        .then(this._handleResponse)
+        .catch(this._handleResponseError);
+    }
     return fetch(`${this.baseUrl}/cards/likes/${cardId}`, {
       method: 'DELETE',
       headers: this.headers,
     })
-    .then(this._handleResponse)
-    .catch(this._handleResponseError);
+      .then(this._handleResponse)
+      .catch(this._handleResponseError);
   }
+
+
+  // addLike(cardId) {
+  //   return fetch(`${this.baseUrl}/cards/likes/${cardId}`, {
+  //     method: 'PUT',
+  //     headers: this.headers,
+  //   })
+  //   .then(this._handleResponse)
+  //   .catch(this._handleResponseError);
+  // }
+
+  // deleteLike(cardId) {
+  //   return fetch(`${this.baseUrl}/cards/likes/${cardId}`, {
+  //     method: 'DELETE',
+  //     headers: this.headers,
+  //   })
+  //   .then(this._handleResponse)
+  //   .catch(this._handleResponseError);
+  // }
 }
 
 const api = new Api(config);

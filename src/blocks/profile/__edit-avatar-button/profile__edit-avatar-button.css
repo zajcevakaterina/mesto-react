@@ -16,3 +16,12 @@
 .profile__avatar:hover + .profile__edit-avatar-button {
   display: block;
 }
+
+@media screen and (max-width: 768px) {
+  .profile__edit-avatar-button {
+    top: 28%;
+    left: 50%;
+    transform:translate(-50%, -50%);
+  }
+}
+

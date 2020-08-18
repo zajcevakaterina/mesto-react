@@ -4,7 +4,12 @@ import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
-import ImagePopup from './ImagePopup'
+import EditProfilePopup from './EditProfilePopup';
+import ImagePopup from './ImagePopup';
+import api from '../utils/api';
+import CurrentUserContext from '../contexts/CurrentUserContext'
+import EditAvatarPopup from './EditAvatarPopup';
+import AddPlacePopup from './AddPlacePopup';
 
 class App extends React.Component {
   constructor(props) {
@@ -15,6 +20,18 @@ class App extends React.Component {
       isEditAvatarPopupOpen: false,
       isDeletePlacePopupOpen: false,
       selectedCard: null,
+      currentUser: {
+        userName: '',
+        userDescription: '',
+        userAvatar: '',
+        userId: ''
+      },
+      cards: [],
+      isLoading: {
+        editProfileData: false,
+        editAvatar: false,
+        addPlace: false
+      }
     }
   }
 
@@ -58,93 +75,159 @@ class App extends React.Component {
     });
   }
 
+  setIsLoadingState = (popup) => {
+    this.setState({
+      isLoading: {
+        ...this.state.isLoading,
+        [popup]: !this.state.isLoading[popup]
+      }
+    })
+  }
+
+  handleUpdateUser = (name, description) => {
+    this.setIsLoadingState('editProfileData')
+    api
+      .setUserInfo(name, description)
+      .then(info =>
+        this.setState({
+          currentUser: {
+            ...this.state.currentUser,
+            userName: info.name,
+            userDescription: info.about
+          }
+        }))
+      .catch(err => console.error(err))
+      .finally(() =>
+        this.setIsLoadingState('editProfileData')
+      )
+  }
+
+  handleUpdateAvatar = (avatar) => {
+    this.setIsLoadingState('editAvatar')
+    api
+      .setUserAvatar(avatar)
+      .then(info =>
+        this.setState({
+          currentUser: {
+            ...this.state.currentUser,
+            userAvatar: info.avatar
+          }
+        }))
+      .catch(err => console.error(err))
+      .finally(() => {
+        this.setIsLoadingState('editAvatar')
+      })
+  }
+
+  changeCardLike = (card) => {
+    const isLiked = card.likes.some(i => i._id === this.state.currentUser.userId);
+    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
+      const newCards = this.state.cards.map((c) => c._id === card._id ? newCard : c);
+      this.setState({
+        cards: newCards
+      });
+    })
+      .catch(err => console.error(err));
+  }
+
+  handleCardDelete = (cardId) => {
+    api.deleteCard(cardId).then((res) => {
+      const newCards = this.state.cards.filter((c) => c._id !== cardId);
+      this.setState({
+        cards: newCards
+      });
+    })
+      .catch(err => console.error(err));
+  }
+
+  handleAddPlaceSubmit = (name, link) => {
+    this.setIsLoadingState('addPlace')
+    api
+      .addCard(name, link)
+      .then((newCard) => {
+        this.setState({
+          cards: [...this.state.cards, newCard]
+        })
+      })
+      .catch(err => console.error(err))
+      .finally(() => {
+        this.setIsLoadingState('addPlace')
+      })
+  }
+
+  componentDidMount() {
+    api
+      .getUserInfo()
+      .then(info =>
+        this.setState({
+          currentUser: {
+            userName: info.name,
+            userDescription: info.about,
+            userAvatar: info.avatar,
+            userId: info._id
+          }
+        }))
+      .catch(err => console.error(err));
+    api
+      .getInitialCards()
+      .then(cards => this.setState({
+        cards
+      }))
+      .catch(err => console.error(err))
+  }
+
   render() {
     return (
-      <div className="app">
-        <Header />
-        <Main
-          onEditAvatar={this.handleEditAvatarClick}
-          onEditProfile={this.handleEditProfileClick}
-          onAddPlace={this.handleAddPlaceClick}
-          onCardClick={this.handleCardClick}
-          onDeletePlace={this.handleDeletePlaceClick} />
-        <Footer />
+      <CurrentUserContext.Provider value={this.state.currentUser}>
+        <div className="app">
+          <Header />
+          <Main
+            cards={this.state.cards}
+            onCardLike={this.changeCardLike}
+            onCardDelete={this.handleCardDelete}
+            onEditAvatar={this.handleEditAvatarClick}
+            onEditProfile={this.handleEditProfileClick}
+            onAddPlace={this.handleAddPlaceClick}
+            onCardClick={this.handleCardClick}
+            onDeletePlace={this.handleDeletePlaceClick} />
+          <Footer />
 
-        <section className="popups">
-          <PopupWithForm
-            isOpen={this.state.isEditProfilePopupOpen}
-            title='Редактировать профиль'
-            name='edit-profile'
-            onClose={this.closeAllPopups}
-            buttonText="Сохранить"
-            children={(
-              <React.Fragment>
-                <label className="form__field">
-                  <input type="text" name="name" id="profile-name" className="form__item form__item_el_name"
-                    placeholder="Имя и фамилия" minLength="2" maxLength="40" required />
-                  <span className="form__item-error" id="profile-name-error"></span>
-                </label>
+          <section className="popups">
+            <EditProfilePopup
+              isLoading={this.state.isLoading.editProfileData}
+              isOpen={this.state.isEditProfilePopupOpen}
+              onClose={this.closeAllPopups}
+              onUpdateUser={(name, description) => this.handleUpdateUser(name, description)} />
 
-                <label className="form__field">
-                  <input type="text" name="job" id="profile-job" placeholder="Род занятий"
-                    className="form__item form__item_el_job" minLength="2" maxLength="200" required />
-                  <span className="form__item-error" id="profile-job-error"></span>
-                </label>
-              </React.Fragment>)
-            } />
+            <EditAvatarPopup
+              isLoading={this.state.isLoading.editAvatar}
+              isOpen={this.state.isEditAvatarPopupOpen}
+              onClose={this.closeAllPopups}
+              onUpdateAvatar={({ avatar }) => this.handleUpdateAvatar(avatar)}
+            />
 
-          <PopupWithForm
-            isOpen={this.state.isEditAvatarPopupOpen}
-            title='Обновить аватар'
-            name='edit-avatar'
-            onClose={this.closeAllPopups}
-            buttonText='Сохранить'
-            children={(
-              <React.Fragment>
-                <label className="form__field">
-                  <input type="url" name="link" id="avatar-link" placeholder="Ссылка на аватар"
-                    className="form__item form__item_el_avatar-link" required />
-                  <span className="form__item-error" id="avatar-link-error"></span>
-                </label>
-              </React.Fragment>
-            )} />
+            <AddPlacePopup
+              isLoading={this.state.isLoading.addPlace}
+              isOpen={this.state.isAddPlacePopupOpen}
+              onClose={this.closeAllPopups}
+              onAddPlace={this.handleAddPlaceSubmit}
+            />
 
-          <PopupWithForm
-            isOpen={this.state.isAddPlacePopupOpen}
-            title='Новое место'
-            name='add-place'
-            onClose={this.closeAllPopups}
-            buttonText='Создать'
-            children={(
-              <React.Fragment>
-                <label className="form__field">
-                  <input type="text" name="name" id="place-name" className="form__item form__item_el_place-name" minLength="1"
-                    maxLength="30" placeholder="Название" required />
-                  <span className="form__item-error" id="place-name-error"></span>
-                </label>
+            <PopupWithForm
+              isOpen={this.state.isDeletePlacePopupOpen}
+              title='Вы уверены?'
+              name='delete-place'
+              onClose={this.closeAllPopups}
+              buttonText='Да'
+            />
 
-                <label className="form__field">
-                  <input type="url" name="link" id="place-link" placeholder="Ссылка на картинку"
-                    className="form__item form__item_el_place-link" required />
-                  <span className="form__item-error" id="place-link-error"></span>
-                </label>
-              </React.Fragment>
-            )} />
+            <ImagePopup
+              card={this.state.selectedCard}
+              onClose={this.closeAllPopups} />
 
-          <PopupWithForm
-            isOpen={this.state.isDeletePlacePopupOpen}
-            title='Вы уверены?'
-            name='delete-place'
-            onClose={this.closeAllPopups}
-            buttonText='Да'
-          />
-
-          <ImagePopup
-            card={this.state.selectedCard}
-            onClose={this.closeAllPopups} />
-
-        </section>
-      </div>
+          </section>
+        </div>
+      </CurrentUserContext.Provider>
     );
   }
 }

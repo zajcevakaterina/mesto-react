@@ -1,56 +1,35 @@
 import React from 'react';
-import api from '../utils/api';
-import Card from './Card'
+import Card from './Card';
+import CurrentUserContext from '../contexts/CurrentUserContext';
 
 class Main extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      userName: '',
-      userDescription: '',
-      userAvatar: '',
-      cards: []
-    }
-  }
 
-  componentDidMount() {
-    api.getUserInfo().
-    then(info => this.setState({
-      userName: info.name,
-      userDescription: info.about,
-      userAvatar: info.avatar,
-    }))
-    .catch(err => console.error(err));
-    
-    api.getInitialCards()
-    .then(cards => this.setState({
-      cards
-    }))
-    .catch(err => console.error(err))
-  }
+  static contextType = CurrentUserContext;
 
   render() {
     return (
       <main className="main app__section">
         <section className="profile">
-          <img alt="Фотография пользователя." className="profile__avatar" src={this.state.userAvatar} />
+          <img alt="Фотография пользователя." className="profile__avatar" src={this.context.userAvatar} />
           <div className="profile__edit-avatar-button" onClick={this.props.onEditAvatar}></div>
           <div className="profile__title">
-            <h1 className="profile__name">{this.state.userName}</h1>
+            <h1 className="profile__name">{this.context.userName}</h1>
             <button type="button" className="profile__edit-button" onClick={this.props.onEditProfile}></button>
           </div>
-          <p className="profile__subtitle">{this.state.userDescription}</p>
+          <p className="profile__subtitle">{this.context.userDescription}</p>
           <button type="button" className="profile__add-button" onClick={this.props.onAddPlace}></button>
         </section>
 
         <section className="places">
-          {this.state.cards.map((card, index) => {
+          {this.props.cards.map((card, index) => {
             return (
               <Card
+                onCardLike={this.props.onCardLike}
                 onCardClick={this.props.onCardClick}
                 onDeletePlace={this.props.onDeletePlace}
+                onDeleteCardClick={this.props.onCardDelete}
                 card={card}
-                key={index}/>
+                key={index} />
             )
           })}
         </section>
