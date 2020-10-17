@@ -1,0 +1,13 @@
+@import url(./__form/auth__form.css);
+@import url(./__input/auth__input.css);
+@import url(./__link/auth__link.css);
+@import url(./__question/auth__question.css);
+@import url(./__title/auth__title.css);
+@import url(./__button/auth__button.css);
+
+.auth {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 0;
+}
