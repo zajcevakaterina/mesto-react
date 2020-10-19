@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-function SignIn({onSignIn}) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+function SignIn({onSignIn, loginForAuth, passForAuth}) {
+  const [email, setEmail] = useState(loginForAuth);
+  const [password, setPassword] = useState(passForAuth);
 
   const resetForm = () => {
     setEmail('');

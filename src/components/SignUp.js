@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 function SignUp({onSignUp}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const history = useHistory();
 
   const resetForm = () => {
     setEmail('');
@@ -14,7 +15,10 @@ function SignUp({onSignUp}) {
     e.preventDefault();
 
     onSignUp(email, password)
-      .then(() => resetForm())
+      .then(() => {
+        resetForm();
+        history.push('/signin');
+      })
       .catch((err) => console.log(err));
   };
 

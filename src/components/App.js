@@ -46,6 +46,8 @@ class App extends React.Component {
         email: "",
         _id: "",
       },
+      loginForAuth: '',
+      passForAuth: ''
     };
   }
 
@@ -58,6 +60,8 @@ class App extends React.Component {
             isInfoTooltipPopupOpen: true,
             infoTooltipMessage: "Вы успешно зарегистрировались!",
             infoTooltipIcon: "success",
+            loginForAuth: email,
+            passForAuth: password
           });
         }
       })
@@ -292,7 +296,7 @@ class App extends React.Component {
               onDeletePlace={this.handleDeletePlaceClick}
             />
             <Route path="/sign-in">
-              <SignIn onSignIn={this.onSignIn} />
+              <SignIn onSignIn={this.onSignIn} loginForAuth={this.state.loginForAuth} passForAuth={this.state.passForAuth} />
             </Route>
             <Route path="/sign-up">
               <SignUp onSignUp={this.onSignUp} />
