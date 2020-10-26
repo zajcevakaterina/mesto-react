@@ -1,7 +1,7 @@
 const config = {
-  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-13',
+  baseUrl: 'http://api.zaj.students.nomoreparties.space',
   headers: {
-    authorization: 'ac8eea58-1ab3-4780-8fbf-f684bd9ab1b3',
+    authorization: `Bearer ${localStorage.getItem('jwt')}`,
     'Content-Type': 'application/json'
   }
 };
@@ -91,14 +91,14 @@ class Api {
 
   changeLikeCardStatus(cardId, isLiked) {
     if (isLiked) {
-      return fetch(`${this.baseUrl}/cards/likes/${cardId}`, {
+      return fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
         method: 'PUT',
         headers: this.headers,
       })
         .then(this._handleResponse)
         .catch(this._handleResponseError);
     }
-    return fetch(`${this.baseUrl}/cards/likes/${cardId}`, {
+    return fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
       method: 'DELETE',
       headers: this.headers,
     })

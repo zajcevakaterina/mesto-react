@@ -17,16 +17,16 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "npm run build && scp -r ./build/* zaj@178.154.233.252:/home/zaj/news-frontend"
   },
   "eslintConfig": {
     "extends": "react-app"
   },
-  "homepage": "https://zajcevakaterina.github.io/mesto-react/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zajcevakaterina/mesto-react.git"
   },
+  "homepage": "https://zaj.students.nomoreparties.space",
   "author": "Ekaterina Zaytseva",
   "browserslist": {
     "production": [
