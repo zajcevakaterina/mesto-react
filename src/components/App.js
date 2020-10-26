@@ -30,10 +30,11 @@ class App extends React.Component {
       infoTooltipIcon: "",
       selectedCard: null,
       currentUser: {
-        userName: "",
-        userDescription: "",
-        userAvatar: "",
-        userId: "",
+        name: "",
+        about: "",
+        avatar: "",
+        _id: "",
+        email: "",
       },
       cards: [],
       isLoading: {
@@ -42,10 +43,10 @@ class App extends React.Component {
         addPlace: false,
       },
       loggedIn: false,
-      userData: {
-        email: "",
-        _id: "",
-      },
+      // userData: {
+      //   email: "",
+      //   _id: "",
+      // },
       loginForAuth: '',
       passForAuth: ''
     };
@@ -92,9 +93,12 @@ class App extends React.Component {
   onLogout = () => {
     this.setState({
       loggedIn: false,
-      userData: {
+      currentUser: {
         email: '',
-        _id: ''
+        _id: '',
+        name: '',
+        about: '',
+        avatar: ''
       }
     })
     localStorage.removeItem('jwt');
@@ -105,11 +109,11 @@ class App extends React.Component {
       const jwt = localStorage.getItem("jwt");
       apiAuth
         .autoSign(jwt)
-        .then(({ data }) => {
+        .then((data) => {
           this.setState(
             {
               loggedIn: true,
-              userData: { email: data.email, _id: data._id },
+              currentUser: data,
             },
             () => {
               this.props.history.push("/");
@@ -178,8 +182,8 @@ class App extends React.Component {
         this.setState({
           currentUser: {
             ...this.state.currentUser,
-            userName: info.name,
-            userDescription: info.about,
+            name: info.name,
+            about: info.about,
           },
         })
       )
@@ -195,7 +199,7 @@ class App extends React.Component {
         this.setState({
           currentUser: {
             ...this.state.currentUser,
-            userAvatar: info.avatar,
+            avatar: info.avatar,
           },
         })
       )
@@ -207,7 +211,7 @@ class App extends React.Component {
 
   changeCardLike = (card) => {
     const isLiked = card.likes.some(
-      (i) => i._id === this.state.currentUser.userId
+      (i) => i === this.state.currentUser._id
     );
     api
       .changeLikeCardStatus(card._id, !isLiked)
@@ -254,24 +258,25 @@ class App extends React.Component {
 
     api
       .getUserInfo()
-      .then((info) =>
+      .then((info) => {
         this.setState({
           currentUser: {
-            userName: info.name,
-            userDescription: info.about,
-            userAvatar: info.avatar,
-            userId: info._id,
+            name: info.name,
+            about: info.about,
+            avatar: info.avatar,
+            _id: info._id,
+            email: info.email
           },
         })
-      )
+      })
       .catch((err) => console.error(err));
     api
       .getInitialCards()
-      .then((cards) =>
+      .then(({data}) => {
         this.setState({
-          cards,
+          cards: data
         })
-      )
+      })
       .catch((err) => console.error(err));
   }
 
@@ -279,7 +284,7 @@ class App extends React.Component {
     return (
       <CurrentUserContext.Provider value={this.state.currentUser}>
         <div className="app">
-          <Header email={this.state.userData.email} onLogout={this.onLogout}/>
+          <Header email={this.state.currentUser.email} onLogout={this.onLogout}/>
           <Switch>
             <ProtectedRoute
               exact

@@ -27,8 +27,12 @@ class Api {
   }
 
   getUserInfo() {
+    console.log('вызвали')
     return fetch(`${this.baseUrl}/users/me`, {
-      headers: this.headers
+      headers: {
+        ...this.headers,
+        authorization: `Bearer ${localStorage.getItem('jwt')}`
+      }
     })
       .then(this._handleResponse)
       .catch(this._handleResponseError);
@@ -37,7 +41,10 @@ class Api {
   setUserInfo(name, job) {
     return fetch(`${this.baseUrl}/users/me`, {
       method: 'PATCH',
-      headers: this.headers,
+      headers: {
+        ...this.headers,
+        authorization: `Bearer ${localStorage.getItem('jwt')}`
+      },
       body: JSON.stringify({
         name: name,
         about: job,
@@ -50,7 +57,10 @@ class Api {
   setUserAvatar(link) {
     return fetch(`${this.baseUrl}/users/me/avatar`, {
       method: 'PATCH',
-      headers: this.headers,
+      headers: {
+        ...this.headers,
+        authorization: `Bearer ${localStorage.getItem('jwt')}`
+      },
       body: JSON.stringify({
         avatar: link
       })
@@ -61,7 +71,10 @@ class Api {
 
   getInitialCards() {
     return fetch(`${this.baseUrl}/cards`, {
-      headers: this.headers
+      headers: {
+        ...this.headers,
+        authorization: `Bearer ${localStorage.getItem('jwt')}`
+      },
     })
       .then(this._handleResponse)
       .catch(this._handleResponseError);
@@ -70,7 +83,10 @@ class Api {
   addCard(name, link) {
     return fetch(`${this.baseUrl}/cards`, {
       method: 'POST',
-      headers: this.headers,
+      headers: {
+        ...this.headers,
+        authorization: `Bearer ${localStorage.getItem('jwt')}`
+      },
       body: JSON.stringify({
         name: name,
         link: link
@@ -83,7 +99,10 @@ class Api {
   deleteCard(cardId) {
     return fetch(`${this.baseUrl}/cards/${cardId}`, {
       method: 'DELETE',
-      headers: this.headers,
+      headers: {
+        ...this.headers,
+        authorization: `Bearer ${localStorage.getItem('jwt')}`
+      },
     })
       .then(this._handleResponse)
       .catch(this._handleResponseError);
@@ -93,14 +112,20 @@ class Api {
     if (isLiked) {
       return fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
         method: 'PUT',
-        headers: this.headers,
+        headers: {
+          ...this.headers,
+          authorization: `Bearer ${localStorage.getItem('jwt')}`
+        },
       })
         .then(this._handleResponse)
         .catch(this._handleResponseError);
     }
     return fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
       method: 'DELETE',
-      headers: this.headers,
+      headers: {
+        ...this.headers,
+        authorization: `Bearer ${localStorage.getItem('jwt')}`
+      },
     })
       .then(this._handleResponse)
       .catch(this._handleResponseError);

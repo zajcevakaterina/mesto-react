@@ -10,18 +10,18 @@ class Main extends React.Component {
     return (
       <main className="main app__section">
         <section className="profile">
-          <img alt="Фотография пользователя." className="profile__avatar" src={this.context.userAvatar} />
+          <img alt="Фотография пользователя." className="profile__avatar" src={this.context.avatar} />
           <div className="profile__edit-avatar-button" onClick={this.props.onEditAvatar}></div>
           <div className="profile__title">
-            <h1 className="profile__name">{this.context.userName}</h1>
+            <h1 className="profile__name">{this.context.name}</h1>
             <button type="button" className="profile__edit-button" onClick={this.props.onEditProfile}></button>
           </div>
-          <p className="profile__subtitle">{this.context.userDescription}</p>
+          <p className="profile__subtitle">{this.context.about}</p>
           <button type="button" className="profile__add-button" onClick={this.props.onAddPlace}></button>
         </section>
 
         <section className="places">
-          {this.props.cards.map((card, index) => {
+          {this.props.cards && this.props.cards.map((card, index) => {
             return (
               <Card
                 onCardLike={this.props.onCardLike}
