@@ -43,12 +43,8 @@ class App extends React.Component {
         addPlace: false,
       },
       loggedIn: false,
-      // userData: {
-      //   email: "",
-      //   _id: "",
-      // },
-      loginForAuth: '',
-      passForAuth: ''
+      loginForAuth: "",
+      passForAuth: "",
     };
   }
 
@@ -56,15 +52,13 @@ class App extends React.Component {
     return apiAuth
       .signUp(email, password)
       .then((res) => {
-        if (res.data) {
-          this.setState({
-            isInfoTooltipPopupOpen: true,
-            infoTooltipMessage: "Вы успешно зарегистрировались!",
-            infoTooltipIcon: "success",
-            loginForAuth: email,
-            passForAuth: password
-          });
-        }
+        this.setState({
+          isInfoTooltipPopupOpen: true,
+          infoTooltipMessage: "Вы успешно зарегистрировались!",
+          infoTooltipIcon: "success",
+          loginForAuth: email,
+          passForAuth: password,
+        });
       })
       .catch((err) => {
         this.setState({
@@ -94,15 +88,15 @@ class App extends React.Component {
     this.setState({
       loggedIn: false,
       currentUser: {
-        email: '',
-        _id: '',
-        name: '',
-        about: '',
-        avatar: ''
-      }
-    })
-    localStorage.removeItem('jwt');
-  }
+        email: "",
+        _id: "",
+        name: "",
+        about: "",
+        avatar: "",
+      },
+    });
+    localStorage.removeItem("jwt");
+  };
 
   tokenCheck = () => {
     if (localStorage.getItem("jwt")) {
@@ -117,7 +111,15 @@ class App extends React.Component {
             },
             () => {
               this.props.history.push("/");
-            }
+            },
+            api
+              .getInitialCards()
+              .then(({ data }) => {
+                this.setState({
+                  cards: data,
+                });
+              })
+              .catch((err) => console.error(err))
           );
         })
         .catch((err) => console.log(err));
@@ -210,9 +212,7 @@ class App extends React.Component {
   };
 
   changeCardLike = (card) => {
-    const isLiked = card.likes.some(
-      (i) => i === this.state.currentUser._id
-    );
+    const isLiked = card.likes.some((i) => i === this.state.currentUser._id);
     api
       .changeLikeCardStatus(card._id, !isLiked)
       .then((newCard) => {
@@ -265,17 +265,17 @@ class App extends React.Component {
             about: info.about,
             avatar: info.avatar,
             _id: info._id,
-            email: info.email
+            email: info.email,
           },
-        })
+        });
       })
       .catch((err) => console.error(err));
     api
       .getInitialCards()
-      .then(({data}) => {
+      .then(({ data }) => {
         this.setState({
-          cards: data
-        })
+          cards: data,
+        });
       })
       .catch((err) => console.error(err));
   }
@@ -284,7 +284,10 @@ class App extends React.Component {
     return (
       <CurrentUserContext.Provider value={this.state.currentUser}>
         <div className="app">
-          <Header email={this.state.currentUser.email} onLogout={this.onLogout}/>
+          <Header
+            email={this.state.currentUser.email}
+            onLogout={this.onLogout}
+          />
           <Switch>
             <ProtectedRoute
               exact
@@ -301,7 +304,11 @@ class App extends React.Component {
               onDeletePlace={this.handleDeletePlaceClick}
             />
             <Route path="/sign-in">
-              <SignIn onSignIn={this.onSignIn} loginForAuth={this.state.loginForAuth} passForAuth={this.state.passForAuth} />
+              <SignIn
+                onSignIn={this.onSignIn}
+                loginForAuth={this.state.loginForAuth}
+                passForAuth={this.state.passForAuth}
+              />
             </Route>
             <Route path="/sign-up">
               <SignUp onSignUp={this.onSignUp} />
