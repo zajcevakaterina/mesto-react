@@ -9,12 +9,14 @@
   border-radius: 50%;
   width: 120px;
   height: 120px;
-  display: none;
   cursor: pointer;
 }
 
-.profile__avatar:hover + .profile__edit-avatar-button {
-  display: block;
+.profile__edit-avatar-button {
+  opacity: 0;
+}
+.profile__edit-avatar-button:hover {
+  opacity: 1;
 }
 
 @media screen and (max-width: 768px) {
