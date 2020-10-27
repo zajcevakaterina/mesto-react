@@ -1,5 +1,5 @@
 const configAuth = {
-  baseUrl: 'https://api.zajc.students.nomoreparties.xyz',
+  baseUrl: 'https://api.mst.students.nomoreparties.xyz',
   headers: {
     'Content-Type': 'application/json'
   }

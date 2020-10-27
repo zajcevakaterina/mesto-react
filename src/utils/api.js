@@ -1,5 +1,5 @@
 const config = {
-  baseUrl: 'https://api.zajc.students.nomoreparties.xyz',
+  baseUrl: 'https://api.mst.students.nomoreparties.xyz',
   headers: {
     authorization: `Bearer ${localStorage.getItem('jwt')}`,
     'Content-Type': 'application/json'
